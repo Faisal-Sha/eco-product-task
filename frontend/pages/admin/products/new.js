@@ -15,9 +15,15 @@ const NewProductPage = () => {
     description: '',
     price: '',
     stock: '',
-    category: '',
+    category: 'water-bottles',
     features: '',
-    image: ''
+    image: '',
+    capacity: '',
+    material: '',
+    color: '',
+    weight: '',
+    height: '',
+    diameter: ''
   });
 
   // Check admin authentication
@@ -67,12 +73,27 @@ const NewProductPage = () => {
         : [];
 
       const productData = {
-        ...formData,
+        name: formData.name,
+        description: formData.description,
         price: parseFloat(formData.price),
+        category: formData.category,
         stock: parseInt(formData.stock),
         features: featuresArray,
-        // Add image to images array if provided
-        images: formData.image ? [{ url: formData.image, alt: formData.name }] : []
+        images: formData.image ? [{ url: formData.image, alt: formData.name, isMain: true }] : [],
+        specifications: {
+          capacity: formData.capacity || '500ml',
+          material: formData.material || 'Stainless Steel',
+          color: formData.color || 'Blue',
+          weight: formData.weight,
+          dimensions: {
+            height: formData.height,
+            diameter: formData.diameter
+          },
+          isRecyclable: true,
+          isBPAFree: true
+        },
+        isFeatured: false,
+        tags: featuresArray
       };
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
@@ -248,6 +269,105 @@ const NewProductPage = () => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
                   placeholder="https://example.com/image.jpg"
                 />
+              </div>
+
+              {/* Specifications Section */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Product Specifications</h3>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {/* Capacity */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Capacity *
+                    </label>
+                    <input
+                      type="text"
+                      name="capacity"
+                      value={formData.capacity}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                      placeholder="500ml"
+                    />
+                  </div>
+
+                  {/* Material */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Material *
+                    </label>
+                    <input
+                      type="text"
+                      name="material"
+                      value={formData.material}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                      placeholder="Stainless Steel"
+                    />
+                  </div>
+
+                  {/* Color */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Color *
+                    </label>
+                    <input
+                      type="text"
+                      name="color"
+                      value={formData.color}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                      placeholder="Blue"
+                    />
+                  </div>
+
+                  {/* Weight */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Weight
+                    </label>
+                    <input
+                      type="text"
+                      name="weight"
+                      value={formData.weight}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                      placeholder="350g"
+                    />
+                  </div>
+
+                  {/* Height */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Height
+                    </label>
+                    <input
+                      type="text"
+                      name="height"
+                      value={formData.height}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                      placeholder="25cm"
+                    />
+                  </div>
+
+                  {/* Diameter */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Diameter
+                    </label>
+                    <input
+                      type="text"
+                      name="diameter"
+                      value={formData.diameter}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                      placeholder="7cm"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Submit Buttons */}

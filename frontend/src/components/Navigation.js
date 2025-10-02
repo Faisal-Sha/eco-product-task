@@ -122,21 +122,26 @@ const Navigation = () => {
           <div className="flex items-center space-x-4 min-w-0 flex-shrink-0">
             {user ? (
               // Authenticated user section
-              <div className="flex items-center space-x-3">
-                <div className="flex flex-col items-end min-w-0">
-                  <span className="text-sm font-medium text-gray-900 truncate">
-                    {user.name}
-                  </span>
-                  <span className="text-xs text-gray-500 capitalize">
-                    {user.role}
-                  </span>
+              <div className="flex items-center space-x-4">
+                {/* User Info Dropdown */}
+                <div className="flex items-center space-x-3 bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-xl border border-gray-200 hover:border-gray-300 transition-all duration-200">
+                  <div className="h-8 w-8 bg-gradient-to-br from-primary-500 via-primary-600 to-eco-600 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-sm flex-shrink-0">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-medium text-gray-900 truncate max-w-[120px]">
+                      {user.name}
+                    </span>
+                    <span className="text-xs text-gray-500 capitalize">
+                      {user.role}
+                    </span>
+                  </div>
                 </div>
-                <div className="h-9 w-9 bg-gradient-to-br from-primary-500 via-primary-600 to-eco-600 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md flex-shrink-0">
-                  {user.name.charAt(0).toUpperCase()}
-                </div>
+                
+                {/* Logout Button */}
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-1 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors px-3 py-2 rounded-lg hover:bg-red-50"
+                  className="flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-red-600 transition-colors px-4 py-2 rounded-xl border border-gray-200 hover:border-red-200 hover:bg-red-50 bg-white shadow-sm hover:shadow-md"
                 >
                   <LogoutIcon className="h-4 w-4" />
                   <span>Logout</span>

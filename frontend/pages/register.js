@@ -166,6 +166,29 @@ const RegisterPage = () => {
                 )}
               </div>
 
+              {/* Role Selection */}
+              <div>
+                <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+                  Account Type
+                </label>
+                <select
+                  {...register('role', {
+                    required: 'Please select an account type'
+                  })}
+                  className="input-field"
+                  defaultValue="user"
+                >
+                  <option value="user">Regular User</option>
+                  <option value="admin">Administrator</option>
+                </select>
+                {errors.role && (
+                  <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>
+                )}
+                <p className="mt-1 text-xs text-gray-500">
+                  Administrators can manage products and have full access to the system.
+                </p>
+              </div>
+
               {/* Password Field */}
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">

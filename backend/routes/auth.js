@@ -38,12 +38,16 @@ router.post('/register',
           throw new Error('Password confirmation does not match password');
         }
         return value;
-      })
+      }),
+    body('role')
+      .optional()
+      .isIn(['user', 'admin'])
+      .withMessage('Role must be either user or admin')
   ],
   handleValidationErrors,
   async (req, res) => {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, password, role = 'user' } = req.body;
 
       // Check if user already exists
       const existingUser = await User.findOne({ email });
@@ -57,7 +61,8 @@ router.post('/register',
       const user = new User({
         name,
         email,
-        password
+        password,
+        role
       });
 
       await user.save();

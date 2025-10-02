@@ -51,7 +51,8 @@ const AdminProductsPage = () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
       if (response.ok) {
         const data = await response.json();
-        setProducts(data.products || []);
+        // Handle both possible response formats
+        setProducts(data.data || data.products || []);
       } else {
         toast.error('Failed to fetch products');
       }

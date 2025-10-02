@@ -61,7 +61,7 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://localhost:8080/api
+      - NEXT_PUBLIC_API_URL=http://localhost:8080
       - API_URL=http://nginx:80/api
       - NEXT_PUBLIC_CDN_URL=https://res.cloudinary.com/demo
     ports:
