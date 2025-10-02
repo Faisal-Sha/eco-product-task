@@ -1,0 +1,72 @@
+config:
+  target: 'http://localhost:8080'
+  phases:
+    # Progressive ramp-up for scaled infrastructure
+    - duration: 60
+      arrivalRate: 20    # Start with 20 users/sec
+      name: "Warm-up Phase"
+    - duration: 120
+      arrivalRate: 50    # Scale to 50 users/sec
+      name: "Normal Load"
+    - duration: 120
+      arrivalRate: 100   # Push to 100 users/sec 
+      name: "High Load"
+    - duration: 120
+      arrivalRate: 200   # Test peak capacity
+      name: "Peak Load Test"
+    - duration: 60
+      arrivalRate: 300   # Stress test
+      name: "Stress Test"
+
+scenarios:
+  - name: "High Load User Journey"
+    weight: 60
+    flow:
+      - get:
+          url: "/health"
+          expect:
+            - statusCode: 200
+      - think: 1
+      - get:
+          url: "/api/products"
+          expect:
+            - statusCode: [200, 429]
+      - think: 2
+      - get:
+          url: "/api/products/featured"
+          expect:
+            - statusCode: [200, 429]
+      - think: 1
+
+  - name: "Authentication Flow"
+    weight: 25
+    flow:
+      - get:
+          url: "/health"
+      - think: 1
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "test@example.com"
+            password: "password123"
+          expect:
+            - statusCode: [200, 401, 429]
+      - think: 3
+
+  - name: "Mixed API Usage"
+    weight: 15
+    flow:
+      - get:
+          url: "/api/products"
+          expect:
+            - statusCode: [200, 429]
+      - think: 1
+      - get:
+          url: "/api/products/featured" 
+          expect:
+            - statusCode: [200, 429]
+      - think: 1
+      - get:
+          url: "/health"
+          expect:
+            - statusCode: 200

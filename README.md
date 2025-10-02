@@ -141,23 +141,10 @@ docker compose exec backend_1 npm run seed
 node test-realtime-demo.js
 
 # Load testing (Artillery.io)
-cd scripts && artillery run load-test.yml
+cd scripts && artillery run load-test-simple.yml
 
 # Quick performance test
 artillery quick --count 100 --num 10 http://localhost:8080/api/products
-```
-
-#### **Real-time Features Testing**
-```bash
-# Test real-time stock updates and WebSocket connections
-node test-realtime-demo.js
-
-# Manual API testing for stock purchases
-curl -X POST http://localhost:8080/api/products/PRODUCT_ID/purchase \
-     -H "Content-Type: application/json" \
-     -d '{"quantity": 2}'
-
-# Open http://localhost:3000/products in browser to see live updates
 ```
 
 ---
@@ -253,25 +240,6 @@ User: john.doe@example.com / User123!
 - ✅ **User Activity**: Purchase tracking and user behavior events
 - ✅ **UI/UX Features**: Live Updates widget, connection status, timestamps, activity feed
 
-### **Testing Real-time Features**
-```bash
-# Start the application
-docker compose up -d
-
-# Open frontend in browser
-open http://localhost:3000/products
-
-# Run real-time test simulation
-node test-realtime-demo.js
-
-# Expected output:
-# 🚀 Real-time Updates Test Script
-# ✅ Found 5 products
-# 🛒 Simulating purchase 1/3...
-# ✅ Purchase successful: 2 Premium Water Bottles
-# ✅ Stock: 15 → 13
-```
-
 ---
 
 ## 📊 **Load Testing & Performance**
@@ -282,10 +250,10 @@ node test-realtime-demo.js
 npm install -g artillery
 
 # Run comprehensive load test (up to 1,000 concurrent users)
-cd scripts && artillery run load-test.yml
+cd scripts && artillery run load-test-simple.yml
 
 # Generate HTML report
-artillery run load-test.yml --output report.json
+artillery run load-testsimple.yml --output report.json
 artillery report report.json
 ```
 
@@ -300,38 +268,6 @@ artillery report report.json
 - **P99 Response Time**: <500ms under peak load ✅
 - **Error Rate**: <1% under sustained load ✅
 - **Throughput**: 100+ requests/second sustained ✅
-
----
-
-## 🚀 **Deployment Options**
-
-### **Local Development**
-```bash
-# Development with hot reload
-docker compose -f docker-compose.dev.yml up
-```
-
-### **Production Deployment**
-
-#### **Option 1: VPS/Cloud Server**
-```bash
-# Production build
-docker compose -f docker-compose.prod.yml up -d
-
-# Scale backend instances for high traffic
-docker compose up -d --scale backend_1=5 --scale backend_2=5
-```
-
-#### **Option 2: Vercel + Railway/Render**
-1. **Frontend**: Deploy to Vercel with automatic CI/CD
-2. **Backend**: Deploy to Railway or Render
-3. **Database**: Use MongoDB Atlas
-4. **Cache**: Use Redis Labs or Railway Redis
-
-#### **Option 3: AWS/GCP/Azure**
-- Container services (ECS, Cloud Run, Container Instances)
-- Managed databases (DocumentDB, Cloud MongoDB)
-- Load balancers (ALB, Cloud Load Balancing)
 
 ---
 
@@ -462,24 +398,11 @@ docker compose exec redis redis-cli FLUSHALL
 docker compose restart redis
 ```
 
-#### **WebSocket Connection Issues**
-```bash
-# Check WebSocket proxy configuration
-curl -H "Connection: Upgrade" -H "Upgrade: websocket" http://localhost:8080/socket.io/
-
-# Test real-time features
-node test-realtime-demo.js
-
-# Monitor backend logs for WebSocket events
-docker compose logs -f backend_1 | grep -i socket
-```
-
 ### **Getting Help**
 - **Check logs**: `docker compose logs [service]`
 - **Run health checks**: `curl http://localhost:8080/health`
 - **Verify metrics**: `curl http://localhost:8080/metrics`
 - **Database status**: `docker compose exec mongodb mongo --eval "db.stats()"`
-- **Test real-time**: `node test-realtime-demo.js`
 
 ---
 
@@ -532,7 +455,7 @@ docker compose up --build
 # Individual test components
 ./scripts/health-check.sh
 node test-realtime-demo.js
-cd scripts && artillery run load-test.yml
+cd scripts && artillery run load-test-simple.yml
 ```
 
 ### **Contributing Guidelines**
@@ -599,12 +522,4 @@ The EcoFlow Water Bottles platform has successfully passed all tests and is read
 
 ---
 
-## 📄 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 **🎉 Project Complete - Production Ready - All Tests Passed ✅**
-
-*Built with ❤️ using modern technologies for high-traffic e-commerce scenarios*

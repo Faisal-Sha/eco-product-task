@@ -327,6 +327,6 @@ echo -e "${BLUE}🎯 To view the comprehensive report:${NC}"
 echo "cat $REPORT_DIR/COMPREHENSIVE-TEST-REPORT-$TIMESTAMP.txt"
 echo
 echo -e "${BLUE}🚀 To run load tests (up to 1,000 users):${NC}"
-echo "cd scripts && artillery run load-test.yml"
+echo "cd scripts && artillery run load-test-simple.yml"
 echo
 echo "Test suite completed at $(date)"

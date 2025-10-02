@@ -1,0 +1,92 @@
+config:
+  target: 'http://localhost:8080'
+  phases:
+    # Warm-up phase
+    - duration: 60
+      arrivalRate: 10
+      name: "Warm-up"
+    # Gradual ramp up phase
+    - duration: 180
+      arrivalRate: 10
+      rampTo: 100
+      name: "Gradual ramp up"
+    # Medium load phase
+    - duration: 240
+      arrivalRate: 100
+      rampTo: 500
+      name: "Medium load"
+    # High load phase
+    - duration: 300
+      arrivalRate: 500
+      rampTo: 1000
+      name: "High load (up to 1000 users)"
+    # Peak sustained load
+    - duration: 180
+      arrivalRate: 1000
+      name: "Peak sustained load"
+    # Cool down phase
+    - duration: 120
+      arrivalRate: 1000
+      rampTo: 50
+      name: "Cool down"
+  
+  # Performance thresholds for high load
+  ensure:
+    p95: 300  # Allow slightly higher response time under extreme load
+    p99: 1000 # P99 can be higher under 1000 concurrent users
+    maxErrorRate: 5  # Allow up to 5% error rate under extreme load
+
+  # Default headers
+  defaults:
+    headers:
+      'Content-Type': 'application/json'
+      'Accept': 'application/json'
+
+scenarios:
+  # Simplified user journey for high load (80% of traffic)
+  - name: "High Load User Journey"
+    weight: 80
+    flow:
+      # Health check (lightweight)
+      - get:
+          url: "/health"
+          expect:
+            - statusCode: 200
+
+      # Get products (most common request)
+      - get:
+          url: "/api/products"
+          qs:
+            limit: "6"  # Smaller limit for faster response
+          expect:
+            - statusCode: 200
+
+  # Authentication flow (15% of traffic)
+  - name: "Authentication Flow"
+    weight: 15
+    flow:
+      # User login with existing user
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "john.doe@example.com"
+            password: "User123!"
+          expect:
+            - statusCode: [200, 401, 429]  # Allow rate limiting
+
+  # Stress test scenario (5% of traffic)
+  - name: "High Load Stress Test"
+    weight: 5
+    flow:
+      # Rapid requests to test system limits
+      - get:
+          url: "/api/products/featured"
+          expect:
+            - statusCode: [200, 429, 503]  # Allow rate limiting and service unavailable
+      - get:
+          url: "/api/products"
+          qs:
+            page: "1"
+            limit: "3"
+          expect:
+            - statusCode: [200, 429, 503]

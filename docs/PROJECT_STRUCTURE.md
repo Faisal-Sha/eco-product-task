@@ -48,9 +48,8 @@ eco-water-bottle/
 ├── 📁 scripts/                    # Utilities & Testing
 │   ├── 📄 init-mongo.js         # MongoDB initialization
 │   ├── 📄 health-check.sh       # System health verification
-│   ├── 📄 load-test.yml         # Artillery load testing
-│   ├── 📄 load-test-functions.js # Test helper functions
-│   └── 📄 test-data.csv         # Test user data
+│   ├── 📄 load-test-simple.yml         # Artillery load testing
+│   ├── 📄 load-test-1000.yml # Artillery load testing
 │
 ├── 📁 docs/                       # Documentation
 │   └── 📄 PROJECT_STRUCTURE.md  # This file
@@ -154,7 +153,7 @@ docker-compose exec backend_1 npm run seed
 ./scripts/health-check.sh
 
 # Load testing
-cd scripts && artillery run load-test.yml
+cd scripts && artillery run load-test-simple.yml
 ```
 
 ## 🎯 Access Points

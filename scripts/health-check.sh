@@ -184,7 +184,7 @@ echo "----------------------"
 # Check if Artillery is installed
 if command -v artillery &> /dev/null; then
     echo -e "Artillery load testing tool: ${GREEN}✓ Installed${NC}"
-    echo "Run load tests with: cd scripts && artillery run load-test.yml"
+    echo "Run load tests with: cd scripts && artillery run load-test-simple.yml"
 else
     echo -e "Artillery load testing tool: ${YELLOW}⚠ Not installed${NC}"
     echo "Install with: npm install -g artillery"

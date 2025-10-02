@@ -1,0 +1,132 @@
+config:
+  target: 'http://localhost:8080'
+  phases:
+    # Warm-up phase
+    - duration: 30
+      arrivalRate: 5
+      name: "Warm-up"
+    # Ramp up phase
+    - duration: 60  
+      arrivalRate: 5
+      rampTo: 25
+      name: "Ramp up load"
+    # Sustained load phase
+    - duration: 120
+      arrivalRate: 25
+      name: "Sustained load"
+    # Peak load phase
+    - duration: 60
+      arrivalRate: 25
+      rampTo: 50
+      name: "Peak load"
+    # Cool down phase
+    - duration: 30
+      arrivalRate: 50
+      rampTo: 5
+      name: "Cool down"
+  
+  # Performance thresholds
+  ensure:
+    p95: 200  # 95th percentile response time should be under 200ms
+    p99: 500  # 99th percentile response time should be under 500ms
+    maxErrorRate: 1  # Error rate should be under 1%
+
+  # Default headers
+  defaults:
+    headers:
+      'Content-Type': 'application/json'
+      'Accept': 'application/json'
+
+scenarios:
+  # Main user journey scenario (70% of traffic)
+  - name: "Main User Journey"
+    weight: 70
+    flow:
+      # Health check
+      - get:
+          url: "/health"
+          expect:
+            - statusCode: 200
+
+      # Get featured products (most common request)
+      - get:
+          url: "/api/products/featured"
+          expect:
+            - statusCode: 200
+            - hasProperty: "data"
+          capture:
+            - json: "$.data[0]._id"
+              as: "featured_product_id"
+      
+      # Browse all products with pagination
+      - get:
+          url: "/api/products"
+          qs:
+            page: "{{ $randomInt(1, 3) }}"
+            limit: "12"
+          expect:
+            - statusCode: 200
+            - hasProperty: "data"
+
+      # View specific product details (if we captured an ID)
+      - get:
+          url: "/api/products/{{ featured_product_id }}"
+          expect:
+            - statusCode: [200, 404]
+          ifTrue: "{{ featured_product_id }}"
+
+  # Authentication scenario (20% of traffic)
+  - name: "Authentication Flow"
+    weight: 20
+    flow:
+      # User login
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "john.doe@example.com"
+            password: "User123!"
+          expect:
+            - statusCode: [200, 401]
+          capture:
+            - json: "$.data.token"
+              as: "auth_token"
+
+      # Get user profile (if authenticated)
+      - get:
+          url: "/api/auth/me"
+          headers:
+            Authorization: "Bearer {{ auth_token }}"
+          expect:
+            - statusCode: [200, 401]
+          ifTrue: "{{ auth_token }}"
+
+  # API stress test scenario (10% of traffic)
+  - name: "API Stress Test"
+    weight: 10
+    flow:
+      # Multiple rapid requests to different endpoints
+      - get:
+          url: "/api/products"
+      - get:
+          url: "/api/products/featured"
+      - get:
+          url: "/api/products"
+          qs:
+            category: "water-bottles"
+      - get:
+          url: "/api/products"
+          qs:
+            category: "accessories"
+      - get:
+          url: "/api/products/categories/stats"
+      # Repeat requests to test rate limiting
+      - get:
+          url: "/api/products"
+      - get:
+          url: "/api/products"
+      - get:
+          url: "/api/products"
+      - get:
+          url: "/api/products"
+      - get:
+          url: "/api/products"
