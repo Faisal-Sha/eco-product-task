@@ -69,8 +69,8 @@ echo
 echo "🌐 Service Endpoints:"
 echo "--------------------"
 
-# Check service endpoints
-if ! check_endpoint "NGINX Load Balancer" "http://localhost:8080"; then
+# Check service endpoints - NGINX root returns 404 by design, so check health endpoint instead
+if ! check_endpoint "NGINX Health Check" "http://localhost:8080/health"; then
     overall_health=1
 fi
 
@@ -86,7 +86,8 @@ if ! check_endpoint "Featured Products" "http://localhost:8080/api/products/feat
     overall_health=1
 fi
 
-if ! check_endpoint "Prometheus Metrics" "http://localhost:9090"; then
+# Prometheus web UI redirects to /graph, so check redirect (302) is expected
+if ! check_endpoint "Prometheus Web UI" "http://localhost:9090" 302; then
     overall_health=1
 fi
 
@@ -107,7 +108,7 @@ echo "-------------------------"
 
 # Check MongoDB connection
 echo -n "MongoDB connection test... "
-if docker exec eco_mongodb mongo --quiet --eval "db.adminCommand('ismaster')" > /dev/null 2>&1; then
+if docker exec eco_mongodb mongosh --quiet --eval "db.adminCommand('ping')" > /dev/null 2>&1; then
     echo -e "${GREEN}✓ Connected${NC}"
 else
     echo -e "${RED}✗ Connection failed${NC}"
@@ -116,7 +117,7 @@ fi
 
 # Check Redis connection  
 echo -n "Redis connection test... "
-if docker exec eco_redis redis-cli ping | grep -q "PONG"; then
+if docker exec eco_redis redis-cli -a redispass123 ping 2>/dev/null | grep -q "PONG"; then
     echo -e "${GREEN}✓ Connected${NC}"
 else
     echo -e "${RED}✗ Connection failed${NC}"
