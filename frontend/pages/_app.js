@@ -2,8 +2,11 @@ import '../styles/globals.css';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import Navigation from '../src/components/Navigation';
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
@@ -14,11 +17,16 @@ function MyApp({ Component, pageProps }) {
     },
   }));
 
+  // Pages that should not show navigation
+  const noNavPages = ['/login', '/register'];
+  const showNav = !noNavPages.includes(router.pathname);
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="font-sans antialiased">
+        {showNav && <Navigation />}
         <Component {...pageProps} />
-        <Toaster 
+        <Toaster
           position="top-right"
           toastOptions={{
             duration: 4000,
