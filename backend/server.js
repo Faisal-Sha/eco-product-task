@@ -108,7 +108,7 @@ app.use(compression());
 // CORS configuration to allow multiple frontend URLs
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://eco-nvh.onrender.com',
+  'https://eco-nv6h.onrender.com',
   process.env.FRONTEND_URL
 ].filter(Boolean); // Remove undefined values
 
