@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import { toast } from 'react-hot-toast';
 import Head from 'next/head';
 import Link from 'next/link';
 import { 
@@ -9,8 +8,6 @@ import {
   ShoppingBagIcon, 
   HeartIcon, 
   CogIcon,
-  ArrowRightOnRectangleIcon as LogoutIcon,
-  BellIcon,
   ChartBarIcon,
   ClockIcon
 } from '@heroicons/react/24/outline';
@@ -49,14 +46,6 @@ const DashboardPage = () => {
     setIsLoading(false);
   }, [router]);
 
-  const handleLogout = () => {
-    // Clear stored data
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    
-    toast.success('Logged out successfully!');
-    router.push('/login');
-  };
 
   if (isLoading) {
     return (
@@ -78,38 +67,6 @@ const DashboardPage = () => {
       </Head>
 
       <div className="min-h-screen bg-gray-50">
-        {/* Navigation Header */}
-        <header className="bg-white shadow-sm border-b">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Link href="/" className="flex items-center">
-                  <div className="h-8 w-8 bg-gradient-to-r from-primary-600 to-eco-600 rounded-lg flex items-center justify-center mr-3">
-                    <span className="text-white font-bold text-sm">E</span>
-                  </div>
-                  <span className="text-xl font-bold text-gray-900">EcoFlow</span>
-                </Link>
-              </div>
-
-              <div className="flex items-center space-x-4">
-                <Link href="/products" className="text-gray-600 hover:text-gray-900">
-                  Products
-                </Link>
-                <div className="relative">
-                  <BellIcon className="h-6 w-6 text-gray-600 hover:text-gray-900 cursor-pointer" />
-                  <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center text-gray-600 hover:text-gray-900"
-                >
-                  <LogoutIcon className="h-5 w-5 mr-1" />
-                  Logout
-                </button>
-              </div>
-            </div>
-          </div>
-        </header>
 
         <div className="container mx-auto px-4 py-8">
           {/* Welcome Section */}

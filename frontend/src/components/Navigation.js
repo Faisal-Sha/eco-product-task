@@ -5,12 +5,12 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { 
   UserIcon, 
-  ShoppingBagIcon, 
   Bars3Icon, 
   XMarkIcon,
   ArrowRightOnRectangleIcon as LogoutIcon,
   ArrowLeftOnRectangleIcon as LoginIcon,
-  UserPlusIcon
+  UserPlusIcon,
+  BellIcon
 } from '@heroicons/react/24/outline';
 
 const Navigation = () => {
@@ -60,158 +60,91 @@ const Navigation = () => {
 
   return (
     <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center py-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <div className="h-10 w-10 bg-gradient-to-r from-primary-600 to-eco-600 rounded-xl flex items-center justify-center mr-3">
-              <span className="text-white font-bold text-lg">E</span>
-            </div>
-            <span className="text-2xl font-bold text-gray-900">EcoFlow</span>
-          </Link>
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center">
+              <div className="h-8 w-8 bg-gradient-to-r from-primary-600 to-eco-600 rounded-lg flex items-center justify-center mr-2">
+                <span className="text-white font-bold text-sm">E</span>
+              </div>
+              <span className="text-xl font-bold text-gray-900">EcoFlow</span>
+            </Link>
+          </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* Center Navigation Links */}
+          <div className="flex items-center space-x-12">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-gray-600 hover:text-gray-900 transition-colors ${
-                  router.pathname === link.href ? 'text-primary-600 font-medium' : ''
+                className={`px-4 py-2 text-sm font-medium transition-colors duration-200 ${
+                  router.pathname === link.href 
+                    ? 'text-primary-600' 
+                    : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
                 {link.label}
               </Link>
             ))}
-
-            {/* Auth Section */}
-            <div className="flex items-center space-x-4">
-              {user ? (
-                // Authenticated user menu
-                <div className="flex items-center space-x-4">
-                  <Link
-                    href="/dashboard"
-                    className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-                  >
-                    <UserIcon className="h-5 w-5 mr-1" />
-                    Dashboard
-                  </Link>
-                  <div className="h-4 w-px bg-gray-300"></div>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center text-gray-600 hover:text-red-600 transition-colors"
-                  >
-                    <LogoutIcon className="h-5 w-5 mr-1" />
-                    Logout
-                  </button>
-                  <div className="flex items-center">
-                    <div className="h-8 w-8 bg-gradient-to-r from-primary-600 to-eco-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                      {user.name.charAt(0).toUpperCase()}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                // Guest user links (show by default until loaded)
-                <div className="flex items-center space-x-4">
-                  <Link
-                    href="/login"
-                    className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-                  >
-                    <LoginIcon className="h-5 w-5 mr-1" />
-                    Login
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="flex items-center bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
-                  >
-                    <UserPlusIcon className="h-5 w-5 mr-1" />
-                    Sign Up
-                  </Link>
-                </div>
-              )}
-            </div>
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 text-gray-600 hover:text-gray-900 focus:outline-none"
-            >
-              {isOpen ? (
-                <XMarkIcon className="h-6 w-6" />
-              ) : (
-                <Bars3Icon className="h-6 w-6" />
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-gray-200 py-4"
-          >
-            <div className="space-y-4">
-              {navLinks.map((link) => (
+          {/* Right Side Auth Section */}
+          <div className="flex items-center space-x-4">
+            {user ? (
+              // Authenticated user menu
+              <>
                 <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className={`block text-gray-600 hover:text-gray-900 transition-colors ${
-                    router.pathname === link.href ? 'text-primary-600 font-medium' : ''
+                  href="/dashboard"
+                  className={`flex items-center text-sm font-medium transition-colors duration-200 ${
+                    router.pathname === '/dashboard'
+                      ? 'text-primary-600'
+                      : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  {link.label}
+                  <UserIcon className="h-4 w-4 mr-1" />
+                  Dashboard
                 </Link>
-              ))}
+                <div className="relative">
+                  <button className="p-1 text-gray-600 hover:text-gray-900 transition-colors duration-200">
+                    <BellIcon className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
+                  </button>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
+                >
+                  <LogoutIcon className="h-4 w-4 mr-1" />
+                  Logout
+                </button>
+                <div className="flex items-center">
+                  <div className="h-8 w-8 bg-gradient-to-r from-primary-600 to-eco-600 rounded-full flex items-center justify-center text-white text-xs font-medium">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                </div>
+              </>
+            ) : (
+              // Guest user links
+              <>
+                <Link
+                  href="/login"
+                  className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="bg-primary-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-700 transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
 
-              <div className="border-t border-gray-200 pt-4 mt-4">
-                {user ? (
-                  <div className="space-y-4">
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-                    >
-                      <UserIcon className="h-5 w-5 mr-2" />
-                      Dashboard ({user.name})
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center text-gray-600 hover:text-red-600 transition-colors w-full text-left"
-                    >
-                      <LogoutIcon className="h-5 w-5 mr-2" />
-                      Logout
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <Link
-                      href="/login"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-                    >
-                      <LoginIcon className="h-5 w-5 mr-2" />
-                      Login
-                    </Link>
-                    <Link
-                      href="/register"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors w-fit"
-                    >
-                      <UserPlusIcon className="h-5 w-5 mr-2" />
-                      Sign Up
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        )}
+        </div>
+
       </div>
     </nav>
   );
