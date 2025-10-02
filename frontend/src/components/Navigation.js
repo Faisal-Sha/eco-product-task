@@ -63,14 +63,14 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo - Left Side */}
-          <div className="flex items-center">
+          <div className="flex items-center min-w-0 flex-shrink-0">
             <Link href="/" className="flex items-center group">
               <div className="h-10 w-10 bg-gradient-to-br from-primary-500 via-primary-600 to-eco-600 rounded-xl flex items-center justify-center mr-3 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
                 <span className="text-white font-bold text-lg">E</span>
               </div>
-              <div className="flex flex-col">
-                <span className="text-2xl font-bold text-gray-900 leading-tight">EcoFlow</span>
-                <span className="text-xs text-primary-600 font-medium -mt-1">Water Bottles</span>
+              <div className="flex flex-col min-w-0">
+                <span className="text-2xl font-bold text-gray-900 leading-tight whitespace-nowrap">EcoFlow</span>
+                <span className="text-xs text-primary-600 font-medium -mt-1 whitespace-nowrap">Water Bottles</span>
               </div>
             </Link>
           </div>
@@ -119,36 +119,46 @@ const Navigation = () => {
           </div>
 
           {/* Right Side - Auth Only */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 min-w-0 flex-shrink-0">
             {user ? (
               // Authenticated user section
               <div className="flex items-center space-x-3">
-                <div className="h-9 w-9 bg-gradient-to-br from-primary-500 via-primary-600 to-eco-600 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+                <div className="flex flex-col items-end min-w-0">
+                  <span className="text-sm font-medium text-gray-900 truncate">
+                    {user.name}
+                  </span>
+                  <span className="text-xs text-gray-500 capitalize">
+                    {user.role}
+                  </span>
+                </div>
+                <div className="h-9 w-9 bg-gradient-to-br from-primary-500 via-primary-600 to-eco-600 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md flex-shrink-0">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                  className="flex items-center space-x-1 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors px-3 py-2 rounded-lg hover:bg-red-50"
                 >
-                  Logout
+                  <LogoutIcon className="h-4 w-4" />
+                  <span>Logout</span>
                 </button>
               </div>
             ) : (
               // Guest user section
-              <>
+              <div className="flex items-center space-x-3">
                 <Link
                   href="/login"
-                  className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                  className="flex items-center space-x-1 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors px-3 py-2 rounded-lg hover:bg-gray-50"
                 >
-                  Login
+                  <LoginIcon className="h-4 w-4" />
+                  <span>Login</span>
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-primary-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors transform hover:scale-105 duration-200 text-center shadow-lg hover:shadow-xl"
                 >
                   Sign Up
                 </Link>
-              </>
+              </div>
             )}
           </div>
         </div>
