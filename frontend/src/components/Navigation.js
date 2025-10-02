@@ -81,9 +81,9 @@ const Navigation = () => {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors duration-200 ${
+                className={`px-3 py-2 text-sm font-medium transition-colors duration-200 hover:bg-gray-50 rounded-lg ${
                   router.pathname === link.href 
-                    ? 'text-primary-600' 
+                    ? 'text-primary-600 bg-primary-50' 
                     : 'text-gray-700 hover:text-gray-900'
                 }`}
               >
@@ -94,9 +94,9 @@ const Navigation = () => {
             {user && (
               <Link
                 href="/dashboard"
-                className={`text-sm font-medium transition-colors duration-200 ${
+                className={`px-3 py-2 text-sm font-medium transition-colors duration-200 hover:bg-gray-50 rounded-lg ${
                   router.pathname === '/dashboard'
-                    ? 'text-primary-600'
+                    ? 'text-primary-600 bg-primary-50'
                     : 'text-gray-700 hover:text-gray-900'
                 }`}
               >
@@ -107,9 +107,9 @@ const Navigation = () => {
             {user && user.role === 'admin' && (
               <Link
                 href="/admin/products"
-                className={`text-sm font-medium transition-colors duration-200 ${
-                  router.pathname === '/admin/products'
-                    ? 'text-primary-600'
+                className={`px-3 py-2 text-sm font-medium transition-colors duration-200 hover:bg-gray-50 rounded-lg ${
+                  router.pathname === '/admin/products' || router.pathname.startsWith('/admin/products')
+                    ? 'text-primary-600 bg-primary-50'
                     : 'text-gray-700 hover:text-gray-900'
                 }`}
               >
