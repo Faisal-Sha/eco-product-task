@@ -4,50 +4,6 @@ const User = require('../models/User');
 const Product = require('../models/Product');
 
 // Sample data
-const sampleUsers = [
-  {
-    name: 'Admin User',
-    email: 'admin@ecowater.com',
-    password: 'Admin123!',
-    role: 'admin',
-    isEmailVerified: true
-  },
-  {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    password: 'User123!',
-    role: 'user',
-    isEmailVerified: true,
-    profile: {
-      phone: '+1-555-0123',
-      address: {
-        street: '123 Main St',
-        city: 'San Francisco',
-        state: 'CA',
-        zipCode: '94105',
-        country: 'USA'
-      }
-    }
-  },
-  {
-    name: 'Jane Smith',
-    email: 'jane.smith@example.com',
-    password: 'User123!',
-    role: 'user',
-    isEmailVerified: true,
-    profile: {
-      phone: '+1-555-0124',
-      address: {
-        street: '456 Oak Ave',
-        city: 'Los Angeles',
-        state: 'CA',
-        zipCode: '90210',
-        country: 'USA'
-      }
-    }
-  }
-];
-
 const sampleProducts = [
   {
     name: 'EcoFlow Premium Water Bottle',
@@ -382,15 +338,9 @@ const seedDatabase = async () => {
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://admin:password123@localhost:27017/ecostore?authSource=admin');
     console.log('Connected to MongoDB');
 
-    // Clear existing data
-    console.log('Clearing existing data...');
-    await User.deleteMany({});
+    // Clear existing products
+    console.log('Clearing existing products...');
     await Product.deleteMany({});
-
-    // Insert users
-    console.log('Seeding users...');
-    const users = await User.insertMany(sampleUsers);
-    console.log(`Created ${users.length} users`);
 
     // Insert products
     console.log('Seeding products...');
@@ -398,9 +348,6 @@ const seedDatabase = async () => {
     console.log(`Created ${products.length} products`);
 
     console.log('Database seeded successfully!');
-    console.log('\\nTest credentials:');
-    console.log('Admin: admin@ecowater.com / Admin123!');
-    console.log('User: john.doe@example.com / User123!');
 
     process.exit(0);
   } catch (error) {
@@ -421,11 +368,20 @@ const createMongoInitScript = () => {
   console.log('MongoDB init script created at:', initScriptPath);
 };
 
-// Run based on command line argument
-const command = process.argv[2];
+// Export sample data for reuse in other scripts
+module.exports = {
+  sampleProducts,
+  seedDatabase,
+  createMongoInitScript
+};
 
-if (command === 'create-init-script') {
-  createMongoInitScript();
-} else {
-  seedDatabase();
+// Run based on command line argument (only when called directly)
+if (require.main === module) {
+  const command = process.argv[2];
+  
+  if (command === 'create-init-script') {
+    createMongoInitScript();
+  } else {
+    seedDatabase();
+  }
 }

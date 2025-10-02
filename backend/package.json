@@ -4,7 +4,7 @@
   "description": "High-traffic e-commerce backend API for Eco-Friendly Water Bottle",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node scripts/startup.js",
     "dev": "nodemon server.js",
     "seed": "node scripts/seed.js"
   },

@@ -25,4 +25,5 @@ EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node healthcheck.js
 
+# Use startup script that seeds DB (if needed) then starts server
 CMD ["npm", "start"]
