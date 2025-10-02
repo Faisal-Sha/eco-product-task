@@ -4,19 +4,23 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useProductSocket } from '../src/hooks/useSocket';
-import LiveUpdates from '../src/components/LiveUpdates';
+import { MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline';
 
 const ProductsPage = ({ initialProducts = [], initialTotal = 0 }) => {
   const [products, setProducts] = useState(initialProducts);
+  const [allProducts] = useState(initialProducts); // Keep original for search
   const [currentPage] = useState(1);
   const [totalProducts] = useState(initialTotal);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('name');
+  const [filterBy, setFilterBy] = useState('all');
   
   // WebSocket for real-time updates
   const { stockUpdates, priceUpdates, isConnected } = useProductSocket();
 
-  // Apply real-time updates to products
+  // Apply search, filter, sort, and real-time updates
   const updatedProducts = useMemo(() => {
-    return products.map(product => {
+    let processedProducts = allProducts.map(product => {
       const productId = product._id;
       const stockUpdate = stockUpdates.get(productId);
       const priceUpdate = priceUpdates.get(productId);
@@ -32,7 +36,49 @@ const ProductsPage = ({ initialProducts = [], initialTotal = 0 }) => {
         _priceTimestamp: priceUpdate?.timestamp
       };
     });
-  }, [products, stockUpdates, priceUpdates]);
+
+    // Apply search filter
+    if (searchTerm.trim()) {
+      const searchLower = searchTerm.toLowerCase();
+      processedProducts = processedProducts.filter(product => 
+        product.name.toLowerCase().includes(searchLower) ||
+        product.description.toLowerCase().includes(searchLower) ||
+        (product.features && product.features.some(feature => 
+          feature.toLowerCase().includes(searchLower)
+        ))
+      );
+    }
+
+    // Apply stock filter
+    if (filterBy === 'in_stock') {
+      processedProducts = processedProducts.filter(product => product.stock > 0);
+    } else if (filterBy === 'out_of_stock') {
+      processedProducts = processedProducts.filter(product => product.stock === 0);
+    }
+
+    // Apply sorting
+    processedProducts.sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'price_low':
+          return a.price - b.price;
+        case 'price_high':
+          return b.price - a.price;
+        case 'stock':
+          return b.stock - a.stock;
+        default:
+          return 0;
+      }
+    });
+
+    return processedProducts;
+  }, [allProducts, stockUpdates, priceUpdates, searchTerm, filterBy, sortBy]);
+
+  // Update products state when search/filter changes
+  useEffect(() => {
+    setProducts(updatedProducts);
+  }, [updatedProducts]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -72,9 +118,61 @@ const ProductsPage = ({ initialProducts = [], initialTotal = 0 }) => {
             </p>
           </motion.div>
 
-          {/* Live Updates Widget */}
-          <div className="mb-8">
-            <LiveUpdates className="max-w-md mx-auto" />
+          {/* Product Search and Filters */}
+          <div className="mb-8 max-w-4xl mx-auto">
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <div className="flex flex-col md:flex-row gap-4">
+                {/* Search Bar */}
+                <div className="flex-1 relative">
+                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  />
+                </div>
+                
+                {/* Sort Dropdown */}
+                <div className="relative">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-3 pr-8 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  >
+                    <option value="name">Sort by Name</option>
+                    <option value="price_low">Price: Low to High</option>
+                    <option value="price_high">Price: High to Low</option>
+                    <option value="stock">Stock Level</option>
+                  </select>
+                  <FunnelIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                </div>
+                
+                {/* Filter Dropdown */}
+                <div className="relative">
+                  <select
+                    value={filterBy}
+                    onChange={(e) => setFilterBy(e.target.value)}
+                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-3 pr-8 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  >
+                    <option value="all">All Products</option>
+                    <option value="in_stock">In Stock Only</option>
+                    <option value="out_of_stock">Out of Stock</option>
+                  </select>
+                </div>
+              </div>
+              
+              {/* Search Results Info */}
+              {searchTerm && (
+                <div className="mt-4 text-sm text-gray-600">
+                  {updatedProducts.length > 0 
+                    ? `Found ${updatedProducts.length} product${updatedProducts.length === 1 ? '' : 's'} matching "${searchTerm}"`
+                    : `No products found matching "${searchTerm}"`
+                  }
+                </div>
+              )}
+            </div>
           </div>
 
           <motion.div

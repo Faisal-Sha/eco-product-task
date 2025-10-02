@@ -64,16 +64,19 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo - Left Side */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center">
-              <div className="h-8 w-8 bg-gradient-to-r from-primary-600 to-eco-600 rounded-lg flex items-center justify-center mr-3">
-                <span className="text-white font-bold text-sm">E</span>
+            <Link href="/" className="flex items-center group">
+              <div className="h-10 w-10 bg-gradient-to-br from-primary-500 via-primary-600 to-eco-600 rounded-xl flex items-center justify-center mr-3 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                <span className="text-white font-bold text-lg">E</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">EcoFlow</span>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold text-gray-900 leading-tight">EcoFlow</span>
+                <span className="text-xs text-primary-600 font-medium -mt-1">Water Bottles</span>
+              </div>
             </Link>
           </div>
 
-          {/* Center Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* Center Navigation Links - Always visible on desktop */}
+          <div className="flex items-center space-x-8">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -100,66 +103,39 @@ const Navigation = () => {
                 Dashboard
               </Link>
             )}
+            
+            {user && user.role === 'admin' && (
+              <Link
+                href="/admin/products"
+                className={`text-sm font-medium transition-colors duration-200 ${
+                  router.pathname === '/admin/products'
+                    ? 'text-primary-600'
+                    : 'text-gray-700 hover:text-gray-900'
+                }`}
+              >
+                Admin
+              </Link>
+            )}
           </div>
 
-          {/* Right Side - Search, Cart, Auth */}
+          {/* Right Side - Auth Only */}
           <div className="flex items-center space-x-4">
             {user ? (
               // Authenticated user section
-              <>
-                {/* Search Icon */}
-                <button className="p-2 text-gray-600 hover:text-gray-900 transition-colors">
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-                
-                {/* Notification Bell */}
-                <div className="relative">
-                  <button className="p-2 text-gray-600 hover:text-gray-900 transition-colors">
-                    <BellIcon className="h-5 w-5" />
-                    <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-                  </button>
+              <div className="flex items-center space-x-3">
+                <div className="h-9 w-9 bg-gradient-to-br from-primary-500 via-primary-600 to-eco-600 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+                  {user.name.charAt(0).toUpperCase()}
                 </div>
-                
-                {/* Cart Icon */}
-                <button className="p-2 text-gray-600 hover:text-gray-900 transition-colors">
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 2.5M7 13v6a2 2 0 002 2h6a2 2 0 002-2v-6" />
-                  </svg>
+                <button
+                  onClick={handleLogout}
+                  className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                >
+                  Logout
                 </button>
-                
-                {/* User Avatar & Logout */}
-                <div className="flex items-center space-x-2">
-                  <div className="h-8 w-8 bg-gradient-to-r from-primary-600 to-eco-600 rounded-full flex items-center justify-center text-white text-xs font-medium">
-                    {user.name.charAt(0).toUpperCase()}
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </>
+              </div>
             ) : (
               // Guest user section
               <>
-                {/* Search Icon */}
-                <button className="p-2 text-gray-600 hover:text-gray-900 transition-colors">
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-                
-                {/* Cart Icon */}
-                <button className="p-2 text-gray-600 hover:text-gray-900 transition-colors">
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 2.5M7 13v6a2 2 0 002 2h6a2 2 0 002-2v-6" />
-                  </svg>
-                </button>
-                
-                {/* Auth Buttons */}
                 <Link
                   href="/login"
                   className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
@@ -168,7 +144,7 @@ const Navigation = () => {
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors shadow-sm"
+                  className="bg-primary-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                 >
                   Sign Up
                 </Link>
