@@ -292,7 +292,7 @@ export async function getServerSideProps() {
   try {
     // Use API_URL for server-side requests (internal Docker network)
     // Fall back to NEXT_PUBLIC_API_URL for development
-    const apiUrl = process.env.API_URL || `${process.env.NEXT_PUBLIC_API_URL}/api` || 'http://localhost:8080/api';
+    const apiUrl = process.env.API_URL || `${process.env.NEXT_PUBLIC_API_URL}` || 'http://localhost:8080';
     const response = await fetch(`${apiUrl}/products?limit=12`);
     
     if (!response.ok) {

@@ -57,7 +57,7 @@ const EditProductPage = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`);
       if (response.ok) {
         const data = await response.json();
         const product = data.product || data.data;
@@ -113,7 +113,7 @@ const EditProductPage = () => {
         images: formData.image ? [{ url: formData.image, alt: formData.name }] : []
       };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

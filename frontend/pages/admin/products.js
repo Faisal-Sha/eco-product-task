@@ -48,7 +48,7 @@ const AdminProductsPage = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`);
       if (response.ok) {
         const data = await response.json();
         // Handle both possible response formats
@@ -67,7 +67,7 @@ const AdminProductsPage = () => {
   const handleDeleteProduct = async (productId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
