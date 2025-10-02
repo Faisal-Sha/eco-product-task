@@ -197,22 +197,13 @@ const LoginPage = () => {
               </motion.button>
 
               {/* Test Credentials */}
-              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              {/* <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <p className="text-xs text-blue-800 font-medium mb-2">Test Credentials:</p>
                 <div className="space-y-1 text-xs text-blue-700">
                   <p><strong>Admin:</strong> admin@ecowater.com / Admin123!</p>
                   <p><strong>User:</strong> john.doe@example.com / User123!</p>
                 </div>
-              </div>
-              
-              {/* Debug Info - Remove after fixing */}
-              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-xs text-red-800 font-medium mb-2">Debug Info:</p>
-                <div className="space-y-1 text-xs text-red-700">
-                  <p><strong>API URL:</strong> {process.env.NEXT_PUBLIC_API_URL || 'undefined'}</p>
-                  <p><strong>Full Login URL:</strong> {`${process.env.NEXT_PUBLIC_API_URL}/auth/login`}</p>
-                </div>
-              </div>
+              </div> */}
             </form>
           </motion.div>
 
