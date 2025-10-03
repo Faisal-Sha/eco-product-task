@@ -1,5 +1,12 @@
 # EcoFlow Water Bottles - Complete E-commerce Platform
 
+## 🌐 **Live Demo & Deployment**
+
+- **Frontend**: https://eco-nv6h.onrender.com/
+- **Backend API**: https://ecoflow.onrender.com
+- **Demo Video 1**: https://www.loom.com/share/b76b385bf3b14cfd95052760e9daef65?sid=ec989758-2896-477d-bff6-a34834c0f25e
+- **Demo Video 2**: https://www.loom.com/share/a43b8fb4d1a3421aba060d9cb5745d2a?sid=4140748c-ddea-400e-8414-246f6b0f19db
+
 ## 🎯 **Project Overview**
 
 A fully integrated, scalable e-commerce platform built for high-traffic scenarios featuring an eco-friendly water bottle company. This project demonstrates modern full-stack development practices with Next.js frontend, Node.js/Express backend, MongoDB, Redis caching, NGINX load balancing, real-time WebSocket updates, and comprehensive monitoring.
